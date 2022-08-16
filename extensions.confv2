@@ -1,0 +1,67 @@
+[internal]
+exten => 7001,1,Answer()
+same  =>     n,set(con=1)
+;same =>     n,Monitor(wav,7001,m)    
+;same =>     n,MixMonitor(7001.wav,a)
+same =>      n,GOTO(confunction,start,1)             
+same =>      n,Dial(SIP/7001,30)                                 
+;same =>     n,Playback(vm-nobodyavail)
+same =>      n,VoiceMail(7001@main)
+same =>      n,Hangup()
+
+
+exten => 7002,1,Answer()
+same  =>      n,set(con=2)
+;same =>      n,Monitor(wav,7002,m)
+;same =>      n,MixMonitor(7002.wav,a)
+same =>       n,GOTO(confunction,start,1)
+same =>       n,Dial(SIP/7002,30)
+;same =>      n,Playback(vm-nobodyavail)
+same =>       n,VoiceMail(7002@main)
+same =>       n,Hangup()
+
+exten => 7003,1,Answer()
+;same =>      n,Monitor(wav,7003,m)
+;same =>      n,MixMonitor(7003.wav,a)
+same =>       n,Dial(SIP/7003,30)
+;same =>      n,Playback(vm-nobodyavail)
+same =>       n,VoiceMail(7003@main)
+same =>       n,Hangup()
+
+[internal]
+exten => _XXXX,1,dial(SIP/${EXTEN}@shayan1)
+same=>         n,hangup()
+
+
+;exten => 6400,1,Set(MONITOR_FILENAME=${CHANNEL}${CALLERID(num)}${STRFTIME(${EPOCH},,%Y%m%d%H%M%S)})
+;same =>       n,Queue(support)                
+;same =>       n,MixMonitor(6400.wav)
+;same =>       n,Hangup()
+
+exten => 8001,1,VoicemailMain(7001@main)
+same =>       n,Hangup()
+
+exten => 8002,1,VoicemailMain(7002@main)
+same =>       n,Hangup()
+
+exten => 8003,1,VoicemailMain(7003@main)
+same =>       n,Hangup()
+
+
+[confunction]
+exten => start,1,Gotoif($[${con}=1]?7001,7001,1:7002,7002,1)
+
+[7001]
+
+exten => 7001,1,Dial(SIP/7001,30)
+same =>       n,hangup()
+
+[7002]
+
+exten => 7002,1,Dial(SIP/7002,30)
+same =>       n,hangup()
+
+[7003]
+
+exten => 7003,1,Dial(SIP/7003,30)
+same =>       n,hangup()
